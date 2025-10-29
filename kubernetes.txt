@@ -1,14 +1,20 @@
 --https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download
 -- java techie: https://www.youtube.com/playlist?list=PLVz2XdJiJQxybsyOxK7WFtteH42ayn5i9
+-- https://medium.com/@javatechie/kubernetes-tutorial-setup-kubernetes-in-windows-run-spring-boot-application-on-k8s-cluster-c6cab8f7de5a
 
-
+Minikube setup steps in windows OS:
+----------------------------------
+C:\Windows\system32>winget install Kubernetes.minikube
 C:\Windows\system32>minikube version
-C:\Windows\system32>minikube start
-C:\Windows\system32>[minikube start --driver=docker]
+C:\Windows\system32>minikube delete
+C:\Windows\system32>minikube delete --all
+C:\Windows\system32>minikube start --driver=docker
 C:\Windows\system32>minikube status
 C:\Windows\system32>kubectl cluster-info
 C:\Windows\system32>kubectl get node
 
+Deploy Spring boot application to Kubernetes cluster:
+----------------------------------------------------
 C:\Windows\system32>minikube docker-env
 SET DOCKER_TLS_VERIFY=1
 SET DOCKER_HOST=tcp://127.0.0.1:52206
@@ -19,20 +25,19 @@ REM @FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env --shell cmd') DO 
 
 C:\Windows\system32>@FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env --shell cmd') DO @%i
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>docker build -t springboot-k8s-demo:1.0 .
+C:\Users\Mohan\Downloads\springboot-k8s-demo>docker build -t spring-boot-k8s-app:1.0 .
 C:\Users\Mohan\Downloads\springboot-k8s-demo>docker images
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl create deployment springboot-k8s --image=springboot-k8s-demo:1.0 --port=8080
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl get deployment
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl describe deployment springboot-k8s
+C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl create deployment spring-boot-k8s --image=spring-boot-k8s-app:1.0 --port=8080
+C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl get deployments
+C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl describe deployment spring-boot-k8s
 C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl get pods
 
 C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl get pods
 NAME                              READY   STATUS    RESTARTS      AGE
-hello-minikube-ffcbb5874-mhpvt    1/1     Running   3 (14m ago)   72m
-springboot-k8s-56f6787c59-mfttv   1/1     Running   0             2m58s
+spring-boot-k8s-56f6787c59-mfttv   1/1     Running   0             2m58s
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl logs springboot-k8s-56f6787c59-mfttv
+C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl logs spring-boot-k8s-56f6787c59-mfttv
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -57,19 +62,18 @@ C:\Users\Mohan\Downloads\springboot-k8s-demo>
 
 C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl get deployments
 NAME             READY   UP-TO-DATE   AVAILABLE   AGE
-hello-minikube   1/1     1            1           74m
-springboot-k8s   1/1     1            1           4m57s
+spring-boot-k8s   1/1     1            1           4m57s
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl expose deployment springboot-k8s --type=NodePort
+C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl expose deployment spring-boot-k8s --type=NodePort
 service/springboot-k8s exposed
 
 C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl get service
 NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 hello-minikube   NodePort    10.109.90.176    <none>        8080:30344/TCP   75m
 kubernetes       ClusterIP   10.96.0.1        <none>        443/TCP          78m
-springboot-k8s   NodePort    10.104.103.125   <none>        8080:32045/TCP   25s
+spring-boot-k8s   NodePort    10.104.103.125   <none>        8080:32045/TCP   25s
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>minikube service springboot-k8s --url
+C:\Users\Mohan\Downloads\springboot-k8s-demo>minikube service spring-boot-k8s --url
 http://127.0.0.1:52373
 ! Because you are using a Docker driver on windows, the terminal needs to be open to run it.
 
