@@ -1,20 +1,23 @@
 apiVersion: apps/v1
-kind: Deployment # Kubernetes resource kind we are creating
+kind: Deployment                                # Creates a Deployment named spring-boot-k8s-yaml
 metadata:
-  name: spring-boot-k8s
+  name: spring-boot-k8s-yaml
 spec:
   selector:
     matchLabels:
-      app: spring-boot-k8s
-  replicas: 2 # Number of replicas that will be created for this deployment
+      app: spring-boot-k8s-yaml
+  replicas: 2                                     # Runs 2 replicas (Pods) of your Spring Boot container
   template:
     metadata:
       labels:
-        app: spring-boot-k8s
+        app: spring-boot-k8s-yaml
     spec:
       containers:
-        - name: spring-boot-k8s
-          image: spring-boot-k8s-example:1.0 # Image that will be used to containers in the cluster
+        - name: spring-boot-k8s-yaml
+          image: spring-boot-k8s-app-yaml:1.0     # Image that will be used to containers in the cluster [docker build -t spring-boot-k8s-app-yaml:1.0 .]
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080 # The port that the container is running on in the cluster
+            - containerPort: 8080                 # The port that the container is running on in the cluster
+
+# kubectl apply -f deployment.yaml
+# kubectl get pods
