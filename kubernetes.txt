@@ -109,3 +109,17 @@ registry.k8s.io/coredns/coredns           v1.11.3    c69fa2e9cbf5   9 months ago
 registry.k8s.io/pause                     3.10       873ed7510279   11 months ago    736kB
 gcr.io/k8s-minikube/storage-provisioner   v5         6e38f40d628d   4 years ago      31.5MB
 
+Deployment: (Not tried)
+----------
+kubectl apply -f deployment.yaml		--> create deployments
+kubectl get deployments					--> print deployments info
+kubectl get pods						--> print pods info
+
+kubectl apply -f service.yaml
+kubectl get service						--> gives port number				
+
+kubectl get nodes -o wide				--> gives ip address or use 'minikube ip'
+node ip + nodeport						--> http://192.168.64.14:32208/message
+minikube dashboard
+
+
