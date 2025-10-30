@@ -5,14 +5,14 @@
 Minikube setup steps in windows OS:
 ----------------------------------
 C:\Windows\system32>winget install Kubernetes.minikube
-C:\Windows\system32>kubectl get node
+C:\Windows\system32>minikube start --driver=docker
+C:\Windows\system32>minikube status
 C:\Windows\system32>minikube stop
 C:\Windows\system32>minikube delete
 C:\Windows\system32>minikube delete --all
 C:\Windows\system32>minikube version
 
-C:\Windows\system32>minikube start --driver=docker
-C:\Windows\system32>minikube status
+C:\Windows\system32>kubectl get node
 C:\Windows\system32>kubectl cluster-info
 
 
@@ -28,17 +28,18 @@ REM @FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env --shell cmd') DO 
 
 C:\Windows\system32>@FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env --shell cmd') DO @%i
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>docker build -t spring-boot-k8s-app:1.0 .
-C:\Users\Mohan\Downloads\springboot-k8s-demo>docker images
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>docker build -t spring-boot-k8s-app:1.0 .
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>docker images
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl create deployment spring-boot-k8s --image=spring-boot-k8s-app:1.0 --port=8080
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl get deployments
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl describe deployment spring-boot-k8s
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl get pods
-NAME                              READY   STATUS    RESTARTS      AGE
-spring-boot-k8s-56f6787c59-mfttv   1/1     Running   0             2m58s
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>kubectl create deployment spring-boot-k8s --image=spring-boot-k8s-app:1.0 --port=8080
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>kubectl get deployments
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>kubectl describe deployment spring-boot-k8s
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>kubectl get pods
+NAME                               READY   STATUS    RESTARTS   AGE
+spring-boot-k8s-544d9b65fc-c7f4s   1/1     Running   0          54s
+spring-boot-k8s-544d9b65fc-xhxpk   1/1     Running   0          54s
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl logs spring-boot-k8s-56f6787c59-mfttv
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>kubectl logs spring-boot-k8s-56f6787c59-mfttv
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -59,33 +60,33 @@ C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl logs spring-boot-k8s-56f678
 2025-05-06T10:59:43.512Z  INFO 1 --- [springboot-k8s-demo] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
 2025-05-06T10:59:43.524Z  INFO 1 --- [springboot-k8s-demo] [           main] n.p.s.SpringbootK8sDemoApplication       : Started SpringbootK8sDemoApplication in 1.869 seconds (process running for 2.368)
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl get deployments
-NAME             READY   UP-TO-DATE   AVAILABLE   AGE
-spring-boot-k8s   1/1     1            1           4m57s
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>kubectl get deployments
+NAME              READY   UP-TO-DATE   AVAILABLE   AGE
+spring-boot-k8s   2/2     2            2           7m38s
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl expose deployment spring-boot-k8s --type=NodePort
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>kubectl expose deployment spring-boot-k8s --type=NodePort
 service/springboot-k8s exposed
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>kubectl get service
-NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
-hello-minikube   NodePort    10.109.90.176    <none>        8080:30344/TCP   75m
-kubernetes       ClusterIP   10.96.0.1        <none>        443/TCP          78m
-spring-boot-k8s   NodePort    10.104.103.125   <none>        8080:32045/TCP   25s
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>kubectl get service
+NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+kubernetes            ClusterIP   10.96.0.1        <none>        443/TCP          9m8s
+spring-boot-k8s       NodePort    10.109.226.251   <none>        8080:32639/TCP   6m33s
+spring-boot-k8s-svc   NodePort    10.100.232.31    <none>        8080:31080/TCP   7m43s
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>minikube service spring-boot-k8s --url
-http://127.0.0.1:52373
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>minikube service spring-boot-k8s --url
+http://127.0.0.1:54087
 ! Because you are using a Docker driver on windows, the terminal needs to be open to run it.
 
-http://127.0.0.1:52373/api/users/hello
-hello, world
+http://127.0.0.1:54087/
+http://127.0.0.1:54087/actuator/health
 
-C:\Users\Mohan\Downloads\springboot-k8s-demo>minikube dashboard
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>minikube dashboard
 kubectl delete service spring-boot-k8s
 kubectl delete deployment spring-boot-k8s
 minikube stop
 minikube delete
 minikube delete --all
-C:\Users\Mohan\Downloads\springboot-k8s-demo>minikube start
+D:\dev\github\kubernetes\2-springboot-k8s-yaml>minikube start
 
 
 -----------------------------------------------------
@@ -98,7 +99,7 @@ minikube docker-env
 
 Deployment:
 ----------
-docker build -t spring-boot-k8s-app-yaml:1.0 .
+docker build -t spring-boot-k8s-app:1.0 .
 kubectl apply -f deployment.yaml													# create deployments and deploy the app
 kubectl get deployments																# print deployments info
 kubectl get pods																	# print pods info. Verify it’s running
@@ -111,7 +112,9 @@ minikube dashboard
 
 Expose the Deployment:
 ---------------------
-kubectl expose deployment spring-boot-k8s-yaml --type=NodePort --port=8080			# To access your Spring Boot app from your host system 
-minikube service spring-boot-k8s-yaml --url											# get the URL Minikube assigns
+kubectl expose deployment spring-boot-k8s --type=NodePort --port=8080				# To access your Spring Boot app from your host system 
+minikube service spring-boot-k8s --url												# get the URL Minikube assigns
 http://192.168.49.2:32145															# output
 
+http://127.0.0.1:54087/
+http://127.0.0.1:54087/actuator/health

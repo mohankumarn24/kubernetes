@@ -1,12 +1,48 @@
+# Purpose: Provides a stable network endpoint to access your Pods
+# In short: Service controls how your app is reachable inside/outside the cluster
+# Without a Service → You can’t reliably reach your Pods, especially if there are multiple replicas
+
 apiVersion: v1                    # Kubernetes API version
 kind: Service                     # Kubernetes resource kind we are creating
 metadata:                         # Metadata of the resource kind we are creating
-  name: spring-boot-k8s-svc-yaml
+  name: spring-boot-k8s-svc       # Creates a Service named spring-boot-k8s-svc
 spec:
   selector:
-    app: spring-boot-k8s-yaml
+    app: spring-boot-k8s          # Selects Pods with the label app: spring-boot-k8s
   ports:
-    - protocol: "TCP"
+    - protocol: TCP               # Protocol used by the service
       port: 8080                  # The port that the service is running on in the cluster
       targetPort: 8080            # The port exposed by the service
-  type: NodePort                  # type of the service.
+      nodePort: 31080             # Port on your local machine (access via localhost:31080)
+  type: NodePort                  # Local exposure type for Minikube / Docker Desktop  
+   # type: LoadBalancer           # Exposes the service externally (cloud provider)
+
+
+## Notes:
+# http://localhost:31080/message         # Accessing the app via NodePort
+# http://<external-ip>/message          # Accessing the app via LoadBalancer
+# kubectl get svc spring-boot-k8s-svc   # To get service details
+# kubectl describe svc spring-boot-k8s-svc # To describe the service in detail
+# kubectl delete svc spring-boot-k8s-svc # To delete the service
+# kubectl delete -f service.yaml       # To delete the service via the yaml file
+# kubectl get all                      # To get all resources in the default namespace
+# kubectl get pods -l app=spring-boot-k8s  # To get pods with specific label
+# kubectl get svc -l app=spring-boot-k8s   # To get services with specific label
+# kubectl expose deployment spring-boot-k8s --type=NodePort --name=spring-boot-k8s-svc --port=8080 --target-port=8080  # To create service from deployment
+# kubectl expose deployment spring-boot-k8s --type=LoadBalancer --name=spring-boot-k8s-svc --port=8080 --target-port=8080  # To create service from deployment
+# kubectl edit svc spring-boot-k8s-svc  # To edit the service configuration
+# kubectl port-forward svc/spring-boot-k8s-svc 8080:8080  # To port-forward the service to localhost
+# kubectl scale deployment spring-boot-k8s --replicas=3  # To scale the deployment to 3 replicas
+# kubectl rollout status deployment/spring-boot-k8s  # To check the rollout status of the deployment
+# kubectl rollout history deployment/spring-boot-k8s  # To view the rollout history of the deployment
+# kubectl rollout undo deployment/spring-boot-k8s  # To rollback the deployment to the previous revision
+# kubectl top pods                     # To view resource usage of pods
+# kubectl top nodes                    # To view resource usage of nodes
+# kubectl logs <pod-name>              # To view logs of a specific pod
+# kubectl logs -l app=spring-boot-k8s  # To view logs of pods with specific label
+# kubectl describe pod <pod-name>      # To describe a specific pod in detail
+# kubectl describe deployment spring-boot-k8s  # To describe the deployment in detail
+# kubectl get events                   # To view recent events in the cluster
+# kubectl get namespaces               # To view all namespaces in the cluster
+# kubectl config view                  # To view the kubeconfig settings
+# kubectl get nodes                    # To view all nodes in the cluster

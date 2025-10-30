@@ -1,23 +1,56 @@
+# Purpose: Manages the Pods (your actual application instances)
+# In short: Deployment controls how your app runs, scales, and updates in the cluster
+# Without a Deployment → Pods might die and not come back
+
 apiVersion: apps/v1
-kind: Deployment                                # Creates a Deployment named spring-boot-k8s-yaml
+kind: Deployment                                # Kubernetes resource kind we are creating
 metadata:
-  name: spring-boot-k8s-yaml
+  name: spring-boot-k8s                         # Creates a Deployment named spring-boot-k8s-yaml
 spec:
+  replicas: 2                                   # Number of desired Pods (ensures 2 instances of your Spring Boot app run)
   selector:
     matchLabels:
-      app: spring-boot-k8s-yaml
-  replicas: 2                                     # Runs 2 replicas (Pods) of your Spring Boot container
+      app: spring-boot-k8s                      # Label to identify Pods managed by this Deployment
   template:
     metadata:
       labels:
-        app: spring-boot-k8s-yaml
+        app: spring-boot-k8s                    # Label to identify Pods managed by this Deployment
     spec:
       containers:
-        - name: spring-boot-k8s-yaml
-          image: spring-boot-k8s-app-yaml:1.0     # Image that will be used to containers in the cluster [docker build -t spring-boot-k8s-app-yaml:1.0 .]
-          imagePullPolicy: IfNotPresent
+        - name: spring-boot-k8s                 # Name of the container
+          image: spring-boot-k8s-app:1.0        # Image that will be used to containers in the cluster [docker build -t spring-boot-k8s-app:1.0 .]
+          imagePullPolicy: IfNotPresent         # Pulls the image only if not present on the node
           ports:
-            - containerPort: 8080                 # The port that the container is running on in the cluster
+            - containerPort: 8080               # The port that the container is running on in the cluster  
+          resources:
+            requests:
+              memory: "256Mi"                   # Minimum memory required     
+              cpu: "100m"                       # Minimum CPU required
+            limits:
+              memory: "512Mi"                   # Maximum memory allowed
+              cpu: "250m"                       # Maximum CPU allowed                       
+          readinessProbe:
+            httpGet:
+              path: /actuator/health            # Endpoint to check container health
+              port: 8080                        # Port to access the health endpoint
+            initialDelaySeconds: 10             # Time to wait before starting health checks  
+            periodSeconds: 5                    # Frequency of health checks
+          livenessProbe:
+            httpGet:
+              path: /actuator/health            # Endpoint to check if container is alive
+              port: 8080                        # Port to access the liveness endpoint
+            initialDelaySeconds: 30             # Time to wait before starting liveness checks
+            periodSeconds: 10                   # Frequency of liveness checks
 
+## Apply Deployment & Service:
+# docker build -t spring-boot-k8s-app:1.0 .
 # kubectl apply -f deployment.yaml
+# kubectl apply -f service.yaml
+
+## Check Pods & Service:
 # kubectl get pods
+# kubectl get svc
+
+## Access the app:
+# If NodePort: http://<node-ip>:<nodePort>/message
+# If LoadBalancer: http://<external-ip>/message
