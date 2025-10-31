@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment                                # Kubernetes resource kind we are creating
 metadata:
-  name: spring-boot-k8s                         # Creates a Deployment named spring-boot-k8s-yaml
+  name: spring-boot-k8s                         # Creates a Deployment named spring-boot-k8s
 spec:
   replicas: 2                                   # Number of desired Pods (ensures 2 instances of your Spring Boot app run)
   selector:
